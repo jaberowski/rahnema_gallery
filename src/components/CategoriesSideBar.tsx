@@ -3,8 +3,10 @@ import axios from "axios";
 
 function CategoriesSideBar({
   setSelectedCategory,
+  selectedCategory,
 }: {
   setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
+  selectedCategory: string;
 }) {
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -37,7 +39,9 @@ function CategoriesSideBar({
             categories.map((c) => (
               <li
                 onClick={() => setSelectedCategory(c)}
-                className="border-b-2 first-of-type:border-t-2 border-black p-1"
+                className={`border-b-2 first-of-type:border-t-2 border-black p-1 ${
+                  selectedCategory === c ? "text-blue-600" : ""
+                }`}
               >
                 {c}
               </li>

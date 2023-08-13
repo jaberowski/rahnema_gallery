@@ -4,12 +4,15 @@ import CategoriesSideBar from "./components/CategoriesSideBar";
 import Gallery from "./components/Gallery";
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState("dog");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   return (
     <div className="w-10/12 mx-auto min-h-screen  grid grid-cols-5">
       <div className="basis  col-span-1">
-        <CategoriesSideBar setSelectedCategory={setSelectedCategory} />
+        <CategoriesSideBar
+          setSelectedCategory={setSelectedCategory}
+          selectedCategory={selectedCategory}
+        />
       </div>
       <div className=" col-span-4">
         <Gallery selectedCategory={selectedCategory} />
