@@ -5,17 +5,36 @@ import Gallery from "./components/Gallery";
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  function handleChooseCategory(category: string) {
+    setSelectedCategory(category);
+    setSearchQuery("");
+  }
+
+  function handleSearchQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e) {
+      setSelectedCategory("");
+      setSearchQuery(e.target.value);
+    }
+  }
 
   return (
     <div className="w-10/12 mx-auto min-h-screen  grid grid-cols-5">
       <div className="basis  col-span-1">
         <FiltersSideBar
-          setSelectedCategory={setSelectedCategory}
           selectedCategory={selectedCategory}
+          searchQuery={searchQuery}
+          handleChooseCategory={handleChooseCategory}
+          handleSearchQueryChange={handleSearchQueryChange}
         />
+        <div>search</div>
       </div>
       <div className=" col-span-4">
-        <Gallery selectedCategory={selectedCategory} />
+        <Gallery
+          selectedCategory={selectedCategory}
+          searchQuery={searchQuery}
+        />
       </div>
     </div>
   );

@@ -13,13 +13,19 @@ type Photo = {
   path: string;
 };
 
-function Gallery({ selectedCategory }: { selectedCategory: string }) {
+function Gallery({
+  selectedCategory,
+  searchQuery,
+}: {
+  selectedCategory: string;
+  searchQuery: string;
+}) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setIsLoading(true);
-    if (selectedCategory === "") {
+    if (selectedCategory === "" && searchQuery === "") {
       axios
         .get(`https://frontend-gallery.darkube.app/api/photos`)
         .then((res) => {
@@ -28,7 +34,7 @@ function Gallery({ selectedCategory }: { selectedCategory: string }) {
         .finally(() => {
           setIsLoading(false);
         });
-    } else {
+    } else if (selectedCategory) {
       axios
         .get(
           `https://frontend-gallery.darkube.app/api/categories/${selectedCategory}/photos`
@@ -39,10 +45,21 @@ function Gallery({ selectedCategory }: { selectedCategory: string }) {
         .finally(() => {
           setIsLoading(false);
         });
+    } else if (searchQuery) {
+      axios
+        .get(
+          `https://frontend-gallery.darkube.app/api/photos?search=${searchQuery}`
+        )
+        .then((res) => {
+          setPhotos(res.data);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
 
     //
-  }, [selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   let content: JSX.Element;
   if (isLoading) {
@@ -74,6 +91,11 @@ function Gallery({ selectedCategory }: { selectedCategory: string }) {
           {selectedCategory && (
             <h3 className="text-lg font-semibold">
               Photos for {selectedCategory} category
+            </h3>
+          )}
+          {searchQuery && (
+            <h3 className="text-lg font-semibold">
+              Photos with "{searchQuery}" in it{" "}
             </h3>
           )}
         </div>
