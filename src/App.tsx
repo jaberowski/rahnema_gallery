@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import CategoriesSideBar from "./components/CategoriesSideBar";
+import FiltersSideBar from "./components/FiltersSideBar";
 import Gallery from "./components/Gallery";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="w-10/12 mx-auto min-h-screen  grid grid-cols-5">
       <div className="basis  col-span-1">
-        <CategoriesSideBar
+        <FiltersSideBar
           setSelectedCategory={setSelectedCategory}
           selectedCategory={selectedCategory}
         />

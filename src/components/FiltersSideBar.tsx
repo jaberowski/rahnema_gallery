@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function CategoriesSideBar({
+function FiltersSideBar({
   setSelectedCategory,
   selectedCategory,
 }: {
@@ -53,4 +53,4 @@ function CategoriesSideBar({
   );
 }
 
-export default CategoriesSideBar;
+export default FiltersSideBar;
