@@ -64,8 +64,8 @@ function Gallery({
   let content: JSX.Element;
   if (isLoading) {
     content = (
-      <div className="h-[80%] flex justify-center items-center">
-        Loading Photos for {selectedCategory}
+      <div className="h-full flex justify-center items-center text-2xl font-bold">
+        Loading Photos
       </div>
     );
   } else {
@@ -79,6 +79,14 @@ function Gallery({
               className="object-cover w-full h-full rounded-lg"
             ></img>
           ))}
+      </div>
+    );
+  }
+
+  if (photos.length === 0) {
+    content = (
+      <div className="flex justify-center items-center w-full h-full text-2xl font-bold">
+        No photo found
       </div>
     );
   }
