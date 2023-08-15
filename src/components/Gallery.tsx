@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import axios from "axios";
+import useFetchMany from "../hooks/useFetchMany";
 
 type Photo = {
   id: number;
@@ -20,46 +21,36 @@ function Gallery({
   selectedCategory: string;
   searchQuery: string;
 }) {
-  const [photos, setPhotos] = useState<Photo[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [photos, setPhotos] = useState<Photo[]>([]);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    setIsLoading(true);
-    if (selectedCategory === "" && searchQuery === "") {
-      axios
-        .get(`https://frontend-gallery.darkube.app/api/photos`)
-        .then((res) => {
-          setPhotos(res.data);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else if (selectedCategory) {
-      axios
+  const fetchPhotos = useCallback(() => {
+    if (selectedCategory) {
+      return axios
         .get(
           `https://frontend-gallery.darkube.app/api/categories/${selectedCategory}/photos`
         )
         .then((res) => {
-          setPhotos(res.data);
-        })
-        .finally(() => {
-          setIsLoading(false);
+          return res.data;
         });
     } else if (searchQuery) {
-      axios
+      return axios
         .get(
           `https://frontend-gallery.darkube.app/api/photos?search=${searchQuery}`
         )
         .then((res) => {
-          setPhotos(res.data);
-        })
-        .finally(() => {
-          setIsLoading(false);
+          return res.data;
+        });
+    } else {
+      return axios
+        .get(`https://frontend-gallery.darkube.app/api/photos`)
+        .then((res) => {
+          return res.data;
         });
     }
-
-    //
   }, [selectedCategory, searchQuery]);
+
+  const { data: photos, isLoading } = useFetchMany<Photo>(fetchPhotos);
 
   let content: JSX.Element;
   if (isLoading) {

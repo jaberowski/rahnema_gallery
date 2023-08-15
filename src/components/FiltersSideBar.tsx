@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import axios from "axios";
+import useFetchMany from "../hooks/useFetchMany";
 
 function FiltersSideBar({
   selectedCategory,
@@ -12,20 +13,13 @@ function FiltersSideBar({
   handleChooseCategory: (a: string) => void;
   handleSearchQueryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    setIsLoading(true);
-    axios
+  const fetchCategories = useCallback(() => {
+    return axios
       .get(`https://frontend-gallery.darkube.app/api/categories`)
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .then((result) => result.data);
   }, []);
+
+  const { data: categories, isLoading } = useFetchMany<string>(fetchCategories);
 
   return (
     <div className="w-full h-full p-4 ">
