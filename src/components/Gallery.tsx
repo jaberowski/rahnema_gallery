@@ -68,6 +68,12 @@ function Gallery({
         Loading Photos
       </div>
     );
+  } else if (photos.length === 0) {
+    content = (
+      <div className="flex justify-center items-center w-full h-full text-2xl font-bold">
+        No photo found
+      </div>
+    );
   } else {
     content = (
       <div className="max-h-[80%] grid grid-cols-3 grid-rows-3 gap-2">
@@ -79,14 +85,6 @@ function Gallery({
               className="object-cover w-full h-full rounded-lg"
             ></img>
           ))}
-      </div>
-    );
-  }
-
-  if (photos.length === 0) {
-    content = (
-      <div className="flex justify-center items-center w-full h-full text-2xl font-bold">
-        No photo found
       </div>
     );
   }
