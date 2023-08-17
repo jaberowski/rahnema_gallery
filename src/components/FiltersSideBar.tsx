@@ -1,25 +1,24 @@
 import { useCallback } from "react";
 import axios from "axios";
-import useFetchMany from "../hooks/useFetchMany";
+import useFetchMany from "../hooks/useFetch";
+import { IFilterSideBarProps } from "../types/types";
 
 function FiltersSideBar({
   selectedCategory,
   searchQuery,
   handleChooseCategory,
   handleSearchQueryChange,
-}: {
-  selectedCategory: string;
-  searchQuery: string;
-  handleChooseCategory: (a: string) => void;
-  handleSearchQueryChange: (str: string) => void;
-}) {
+}: IFilterSideBarProps) {
   const fetchCategories = useCallback(() => {
     return axios
       .get(`https://frontend-gallery.darkube.app/api/categories`)
       .then((result) => result.data);
   }, []);
 
-  const { data: categories, isLoading } = useFetchMany<string>(fetchCategories);
+  const { data: categories, isLoading } = useFetchMany<string[]>(
+    fetchCategories,
+    []
+  );
 
   return (
     <div className="w-full h-full p-4 ">
