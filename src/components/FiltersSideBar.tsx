@@ -11,7 +11,7 @@ function FiltersSideBar({
   selectedCategory: string;
   searchQuery: string;
   handleChooseCategory: (a: string) => void;
-  handleSearchQueryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSearchQueryChange: (str: string) => void;
 }) {
   const fetchCategories = useCallback(() => {
     return axios
@@ -58,7 +58,7 @@ function FiltersSideBar({
             className="rounded-lg border border-black p-1"
             placeholder="Enter your Query"
             value={searchQuery}
-            onChange={(e) => handleSearchQueryChange(e)}
+            onChange={(e) => handleSearchQueryChange(e.target.value)}
           />
         </div>
       </div>
