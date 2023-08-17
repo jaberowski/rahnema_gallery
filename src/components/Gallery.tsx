@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import axios from "axios";
-import useFetchMany from "../hooks/useFetch";
+import useFetch from "../hooks/useFetch";
 import { IGalleryProps, Photo } from "../types/types";
+import { galleryClient } from "../api/galleryClient";
 
 class ApiToLocalPhotoAdapter {
   src: string;
@@ -14,37 +14,22 @@ class ApiToLocalPhotoAdapter {
   }
 }
 
+function fetchGalleryData(url: string) {
+  return galleryClient.get(url).then((res) => res.data);
+}
+
 function Gallery({ selectedCategory, searchQuery }: IGalleryProps) {
   const fetchApiPhotos = useCallback(() => {
     if (selectedCategory) {
-      return axios
-        .get(
-          `https://frontend-gallery.darkube.app/api/categories/${selectedCategory}/photos`
-        )
-        .then((res) => {
-          return res.data;
-        });
+      return fetchGalleryData(`categories/${selectedCategory}/photos`);
     } else if (searchQuery) {
-      return axios
-        .get(
-          `https://frontend-gallery.darkube.app/api/photos?search=${searchQuery}`
-        )
-        .then((res) => {
-          return res.data;
-        });
+      return fetchGalleryData(`photos?search=${searchQuery}`);
     } else {
-      return axios
-        .get(`https://frontend-gallery.darkube.app/api/photos`)
-        .then((res) => {
-          return res.data;
-        });
+      return fetchGalleryData(`photos`);
     }
   }, [selectedCategory, searchQuery]);
 
-  const { data: apiPhotos, isLoading } = useFetchMany<Photo[]>(
-    fetchApiPhotos,
-    []
-  );
+  const { data: apiPhotos, isLoading } = useFetch<Photo[]>(fetchApiPhotos, []);
 
   const localPhotos = apiPhotos.map(
     (apiPhoto) => new ApiToLocalPhotoAdapter(apiPhoto)

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import axios from "axios";
 import useFetchMany from "../hooks/useFetch";
 import { IFilterSideBarProps } from "../types/types";
+import { galleryClient } from "../api/galleryClient";
 
 function FiltersSideBar({
   selectedCategory,
@@ -10,9 +10,7 @@ function FiltersSideBar({
   handleSearchQueryChange,
 }: IFilterSideBarProps) {
   const fetchCategories = useCallback(() => {
-    return axios
-      .get(`https://frontend-gallery.darkube.app/api/categories`)
-      .then((result) => result.data);
+    return galleryClient.get(`categories`).then((result) => result.data);
   }, []);
 
   const { data: categories, isLoading } = useFetchMany<string[]>(

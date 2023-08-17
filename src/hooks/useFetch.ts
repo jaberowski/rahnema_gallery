@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useFecth<A>(
+export default function useFetch<A>(
   action: () => Promise<A>,
   initializeValue: A
 ) {
