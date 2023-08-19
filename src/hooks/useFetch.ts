@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 
-export default function useFetchMany<A>(action: () => Promise<A[]>) {
-  const [data, setData] = useState<A[]>([]);
+export default function useFetch<A>(
+  action: () => Promise<A>,
+  initializeValue: A
+) {
+  const [data, setData] = useState<A>(initializeValue);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

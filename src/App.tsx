@@ -12,11 +12,9 @@ function App() {
     setSearchQuery("");
   }
 
-  function handleSearchQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e) {
-      setSelectedCategory("");
-      setSearchQuery(e.target.value);
-    }
+  function handleSearchQueryChange(str: string) {
+    setSelectedCategory("");
+    setSearchQuery(str);
   }
 
   return (

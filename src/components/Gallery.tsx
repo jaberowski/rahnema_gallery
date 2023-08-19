@@ -1,56 +1,39 @@
 import { useCallback } from "react";
-import axios from "axios";
-import useFetchMany from "../hooks/useFetchMany";
+import useFetch from "../hooks/useFetch";
+import { IGalleryProps, Photo } from "../types/types";
+import { galleryClient } from "../api/galleryClient";
 
-type Photo = {
+class ApiToLocalPhotoAdapter {
+  src: string;
   id: number;
-  category: string;
-  url: string;
-  photographer: string;
   alt: string;
-  page_url: string;
-  width: number;
-  height: number;
-  path: string;
-};
+  constructor(apiPhoto: Photo) {
+    this.src = apiPhoto.url;
+    this.id = apiPhoto.id;
+    this.alt = apiPhoto.alt;
+  }
+}
 
-function Gallery({
-  selectedCategory,
-  searchQuery,
-}: {
-  selectedCategory: string;
-  searchQuery: string;
-}) {
-  // const [photos, setPhotos] = useState<Photo[]>([]);
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
+function fetchGalleryData(url: string) {
+  return galleryClient.get(url).then((res) => res.data);
+}
 
-  const fetchPhotos = useCallback(() => {
+function Gallery({ selectedCategory, searchQuery }: IGalleryProps) {
+  const fetchApiPhotos = useCallback(() => {
     if (selectedCategory) {
-      return axios
-        .get(
-          `https://frontend-gallery.darkube.app/api/categories/${selectedCategory}/photos`
-        )
-        .then((res) => {
-          return res.data;
-        });
+      return fetchGalleryData(`categories/${selectedCategory}/photos`);
     } else if (searchQuery) {
-      return axios
-        .get(
-          `https://frontend-gallery.darkube.app/api/photos?search=${searchQuery}`
-        )
-        .then((res) => {
-          return res.data;
-        });
+      return fetchGalleryData(`photos?search=${searchQuery}`);
     } else {
-      return axios
-        .get(`https://frontend-gallery.darkube.app/api/photos`)
-        .then((res) => {
-          return res.data;
-        });
+      return fetchGalleryData(`photos`);
     }
   }, [selectedCategory, searchQuery]);
 
-  const { data: photos, isLoading } = useFetchMany<Photo>(fetchPhotos);
+  const { data: apiPhotos, isLoading } = useFetch<Photo[]>(fetchApiPhotos, []);
+
+  const localPhotos = apiPhotos.map(
+    (apiPhoto) => new ApiToLocalPhotoAdapter(apiPhoto)
+  );
 
   let content: JSX.Element;
   if (isLoading) {
@@ -59,7 +42,7 @@ function Gallery({
         Loading Photos
       </div>
     );
-  } else if (photos.length === 0) {
+  } else if (localPhotos.length === 0) {
     content = (
       <div className="flex justify-center items-center w-full h-full text-2xl font-bold">
         No photo found
@@ -68,11 +51,11 @@ function Gallery({
   } else {
     content = (
       <div className="max-h-[80%] grid grid-cols-3 grid-rows-3 gap-2">
-        {photos
+        {localPhotos
           .filter((_, i) => i < 9)
           .map((photo) => (
             <img
-              src={photo.url}
+              src={photo.src}
               className="object-cover w-full h-full rounded-lg"
             ></img>
           ))}
